@@ -17,6 +17,7 @@ namespace iamReader
         public Form1()
         {
             InitializeComponent();
+<<<<<<< HEAD
             Home();
            
         }
@@ -127,6 +128,9 @@ namespace iamReader
         // 調整字體大小
         private void WordSizeTrackBar_Scroll(object sender, EventArgs e) {
             NovelTextBox.Font = new Font("微軟正黑體", WordSizeTrackBar.Value + 10);
+=======
+            
+>>>>>>> new the html catcher_v1 (with content only)
         }
     }
 }

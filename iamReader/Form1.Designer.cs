@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+<<<<<<< HEAD
             this.WebsiteTextBox = new System.Windows.Forms.TextBox();
             this.DownloadButton = new System.Windows.Forms.Button();
             this.DarkModeButton = new System.Windows.Forms.Button();
@@ -136,6 +137,28 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "iamReader";
             ((System.ComponentModel.ISupportInitialize)(this.WordSizeTrackBar)).EndInit();
+=======
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.SuspendLayout();
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(65, 42);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(590, 348);
+            this.textBox1.TabIndex = 0;
+            // 
+            // Form1
+            // 
+            this.AllowDrop = true;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.textBox1);
+            this.Name = "Form1";
+            this.Text = "Form1";
+>>>>>>> new the html catcher_v1 (with content only)
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -143,6 +166,7 @@
 
         #endregion
 
+<<<<<<< HEAD
         private System.Windows.Forms.TextBox WebsiteTextBox;
         private System.Windows.Forms.Button DownloadButton;
         private System.Windows.Forms.Button DarkModeButton;
@@ -150,6 +174,9 @@
         private System.Windows.Forms.TextBox NovelTextBox;
         private System.Windows.Forms.Label ChapterLabel;
         private System.Windows.Forms.TrackBar WordSizeTrackBar;
+=======
+        private System.Windows.Forms.TextBox textBox1;
+>>>>>>> new the html catcher_v1 (with content only)
     }
 }
 
