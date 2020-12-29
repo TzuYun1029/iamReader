@@ -28,7 +28,10 @@ namespace iamReader
         }
 
         private void DownloadButton_Click(object sender, EventArgs e) {
-            Chapter();
+            if (WebsiteTextBox.Text != " ")
+                Chapter();
+            else
+                PleaseEnterLabel.Visible = true;
         }
 
 
@@ -48,16 +51,24 @@ namespace iamReader
                 this.BackgroundImage = Background;
 
                 NovelTextBox.BackColor = Color.FromArgb(255, 255, 255);
-                NovelTextBox.ForeColor = Color.FromArgb(64, 64, 64);
+                NovelTextBox.ForeColor = Color.FromArgb(119, 92, 65);
 
                 ChapterLabel.BackColor = Color.FromArgb(255, 255, 255);
-                ChapterLabel.ForeColor = Color.FromArgb(64, 64, 64);
+                ChapterLabel.ForeColor = Color.FromArgb(119, 92, 65);
 
                 DarkModeButton.BackColor = Color.FromArgb(64, 64, 64);
-                DarkModeButton.ForeColor = Color.FromArgb(255, 255, 255);
+                DarkModeButton.ForeColor = Color.FromArgb(119, 92, 65);
 
                 HomeButton.BackColor = Color.FromArgb(64, 64, 64);
-                HomeButton.ForeColor = Color.FromArgb(255, 255, 255);
+                HomeButton.ForeColor = Color.FromArgb(119, 92, 65);
+
+                BackToChapterButton.BackColor = Color.FromArgb(64, 64, 64);
+                BackToChapterButton.ForeColor = Color.FromArgb(119, 92, 65);
+
+                IncreaseFontSize.BackColor = Color.FromArgb(64, 64, 64);
+                IncreaseFontSize.ForeColor = Color.FromArgb(119, 92, 65);
+                DecreaseFontSize.BackColor = Color.FromArgb(64, 64, 64);
+                DecreaseFontSize.ForeColor = Color.FromArgb(119, 92, 65);
 
                 DarkModeButton.Text = "深色模式";
             } 
@@ -83,6 +94,14 @@ namespace iamReader
                 HomeButton.BackColor = Color.FromArgb(255, 255, 255);
                 HomeButton.ForeColor = Color.FromArgb(64, 64, 64);
 
+                BackToChapterButton.BackColor = Color.FromArgb(255, 255, 255);
+                BackToChapterButton.ForeColor = Color.FromArgb(64, 64, 64);
+
+                IncreaseFontSize.BackColor = Color.FromArgb(255, 255, 255);
+                IncreaseFontSize.ForeColor = Color.FromArgb(64, 64, 64);
+                DecreaseFontSize.BackColor = Color.FromArgb(255, 255, 255);
+                DecreaseFontSize.ForeColor = Color.FromArgb(64, 64, 64);
+
                 DarkModeButton.Text = "淺色模式";
             }
         }
@@ -100,6 +119,7 @@ namespace iamReader
             WebsiteLabel.Visible = true;
             WebsiteTextBox.Visible = true;
             DownloadButton.Visible = true;
+            PleaseEnterLabel.Visible = false;
 
             NovelTextBox.Visible = false;
             DarkModeButton.Visible = false;
@@ -109,6 +129,8 @@ namespace iamReader
             FontSizeTextBox.Visible = false;
             IncreaseFontSize.Visible = false;
             DecreaseFontSize.Visible = false;
+
+            WebsiteTextBox.Text = " ";
         }
 
         private void Cover() {
@@ -118,6 +140,7 @@ namespace iamReader
             WebsiteLabel.Visible = false;
             WebsiteTextBox.Visible = false;
             DownloadButton.Visible = false;
+            PleaseEnterLabel.Visible = false;
 
             NovelTextBox.Visible = false;
             DarkModeButton.Visible = false;
@@ -130,10 +153,17 @@ namespace iamReader
         }
 
         private void Chapter() {
-            var dir = Directory.GetCurrentDirectory();
-            var path = Path.Combine(dir, "Background.png");
-            Image Background = new Bitmap(path);
-            this.BackgroundImage = Background;
+            if (!DarkMode) {
+                var dir = Directory.GetCurrentDirectory();
+                var path = Path.Combine(dir, "Background.png");
+                Image Background = new Bitmap(path);
+                this.BackgroundImage = Background;
+            } else {
+                var dir = Directory.GetCurrentDirectory();
+                var path = Path.Combine(dir, "BackgroundDark.png");
+                Image Background = new Bitmap(path);
+                this.BackgroundImage = Background;
+            }
 
             GenerateChapterButton(true);
             
@@ -143,6 +173,7 @@ namespace iamReader
             WebsiteLabel.Visible = false;
             WebsiteTextBox.Visible = false;
             DownloadButton.Visible = false;
+            PleaseEnterLabel.Visible = false;
 
             NovelTextBox.Visible = false;
             DarkModeButton.Visible = false;
@@ -163,12 +194,25 @@ namespace iamReader
             string content = await getHtml.GetHtmlAsync();
             Console.WriteLine("Loading content");
 
+            if (DarkMode) {
+                var dir = Directory.GetCurrentDirectory();
+                var path = Path.Combine(dir, "BackgroundDark.png");
+                Image Background = new Bitmap(path);
+                this.BackgroundImage = Background;
+            } else {
+                var dir = Directory.GetCurrentDirectory();
+                var path = Path.Combine(dir, "Background.png");
+                Image Background = new Bitmap(path);
+                this.BackgroundImage = Background;
+            }
+
             StartButton.Visible = false;
             ExitButton.Visible = false;
 
             WebsiteLabel.Visible = false;
             WebsiteTextBox.Visible = false;
             DownloadButton.Visible = false;
+            PleaseEnterLabel.Visible = false;
 
             NovelTextBox.Visible = true;
             DarkModeButton.Visible = true;
@@ -187,6 +231,7 @@ namespace iamReader
 
            
             NovelTextBox.Text = content;
+            NovelTextBox.SetBounds(20,50,this.Width-50,this.Height-100);
 
             FontSizeTextBox.Text = Convert.ToString(NovelTextBox.Font.Size);
         }
@@ -220,29 +265,45 @@ namespace iamReader
         }
 
 
-        int ChapterNum = 20;
-        List<Button> ChapterButton = new List<Button>();
+        int ChapterNum = 100;
+        List<Button> ChapterButtonList = new List<Button>();
+        List<Panel> ChapterPanelList = new List<Panel>();
         private void GenerateChapterButton(bool Generate) {
             if (Generate) {
-                int ButtonWidth = 90;
-                int ButtonHeight = 40;
+                Panel ChapterPanel = new Panel();
+                ChapterPanel.SetBounds(10, 30, this.Width - 60, this.Height - 100);
+                ChapterPanel.AutoScroll = true;
+                ChapterPanel.BackColor = Color.Transparent;
+                Controls.Add(ChapterPanel);
+                ChapterPanelList.Add(ChapterPanel);
+                int ButtonWidth =140;
+                int ButtonHeight = 60;
                 for (int i = 0; i < ChapterNum; i++) {
                     Button btn = new Button();
                     btn.Size = new Size(ButtonWidth, ButtonHeight);
-                    int ButtonLocationX = this.Width / 2 - ButtonWidth / 2 + (i % 3 - 1) * (ButtonWidth + 10);
-                    int ButtonLocationY = this.Height / 2 - ButtonHeight / 2 + (i / 3 - (ChapterNum / 3 + 1) / 2) * (ButtonHeight + 10);
+                    int ButtonLocationX = ChapterPanel.Width / 2 - ButtonWidth / 2 + (i % 3 - 1) * (ButtonWidth + 10);
+                    int ButtonLocationY = ChapterPanel.Height / 2 - ButtonHeight / 2 + (i / 3 - (ChapterNum / 3 + 1) / 2) * (ButtonHeight + 10);
                     btn.Location = new Point(ButtonLocationX, ButtonLocationY);
                     Controls.Add(btn);
                     btn.Click += new EventHandler(ChapterButton_click);
                     btn.Text = "第" + (i + 1) + "章";
-                    btn.BackColor = Color.FromArgb(112, 92, 65);
-                    btn.ForeColor = Color.Linen;
-                    btn.Font = new Font("細明體-ExtB", 10);
-                    ChapterButton.Add(btn);
+                    if (!DarkMode) {
+                        btn.BackColor = Color.Linen;
+                        btn.ForeColor = Color.Black;
+                    } else {
+                        btn.BackColor = Color.FromArgb(64,64,64);
+                        btn.ForeColor = Color.White;
+                    }
+                    btn.Font = new Font("細明體-ExtB", 12);
+                    ChapterButtonList.Add(btn);
+                    ChapterPanel.Controls.Add(btn);
                 }
             } else {
-                for (int i = 0; i < ChapterButton.Count; i++) {
-                    ChapterButton[i].Dispose();
+                for (int i = 0; i < ChapterButtonList.Count; i++) {
+                    ChapterButtonList[i].Dispose();
+                }
+                for (int i = 0; i < ChapterPanelList.Count; i++) {
+                    ChapterPanelList[i].Dispose();
                 }
             }
         }
